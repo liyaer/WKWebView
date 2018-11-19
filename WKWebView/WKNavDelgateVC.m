@@ -51,6 +51,8 @@
     _url = [NSURL URLWithString:@"https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9454146075587313245%22%7D&n_type=0&p_from=1"];//@"http://www.baidu.com"];
     [self.webView loadRequest:[NSURLRequest requestWithURL:_url]];
     
+//    [self.webView loadHTMLString:@"<html><head><title></title><script language='javascript'>location.href='http://mob.cnki.net/EditorB3N/EditorWorkPlace/ReferDown.aspx?mid=yanshi3&downID=l4Nn%2fWscihnFWEifytU5nResR%2bSB47VLVNhQyFg%2bJar1NPOObG3a1V4WYxQ%2brwXf5N6%2fgIh%2b%2fFVo7xWkoO5KOSnBka4%2bUl0tQcPOvT%2bwEPpGwUQRK88zsuuzq0le0r9eyvSrXYshurZt90cdwtLoyaMlwZ4yTk69yJwUA6VTkFH7FXd4BTGJoUmFxMnUrWuZggzEDIE5X9RPOOm58m5c0ljHnncsdO8X4tt22KI16RCVqYLqwzitPXF5uQ8CreCTR4gq9gXE7ecdGNfTSi2XSQtGXcy1gO%2ba&paperNum=20180120&paperTitle=%E6%97%A9%E6%9C%9F%E8%BF%90%E5%8A%A8%E7%96%97%E6%B3%95%E7%BB%93%E5%90%88%E7%89%A9%E7%90%86%E7%96%97%E6%B3%95%E5%AF%B9%E8%80%81%E5%B9%B4%E4%B8%8B%E8%82%A2%E9%AA%A8%E6%8A%98%E6%9C%AF%E5%90%8E%E6%82%A3%E8%80%85%E8%BF%90%E5%8A%A8%E5%8A%9F%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D';</script></head><body></body></html>" baseURL:nil];
+    
     
     //添加监测网页加载进度的观察者
     [self.webView addObserver:self
