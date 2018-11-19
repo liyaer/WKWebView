@@ -1,0 +1,48 @@
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    
+    <body>
+        
+        <div style="margin-top: 100px">
+            <input type="button" value="改变下面的语言" onclick="changeText_js()">
+            <h1> <p id="Id1">It is test .</p> </h1>
+        </div>
+        
+        <div>
+            <img src="4.jpg"  alt="上海鲜花港 - 郁金香" />
+        </div>
+        
+        <a onclick = "pushVC_js()" href="">点击跳转</a>
+            
+        <script>
+            //JS 调用 OC（ JS 端可通过 window.webkit.messageHandlers.<name>.postMessage(<messageBody>) 发送消息，调用 OC 代码）
+            var changeText_js = function()
+            {
+                window.webkit.messageHandlers.Native.postMessage('changeText_oc');//js 调用 oc 中的 <changeText_oc> 方法
+            }
+            var pushVC_js = function()
+            {
+                window.webkit.messageHandlers.Native.postMessage('pushVC_oc');
+            }
+        
+            //OC 调用 JS
+            var changeButtonWithText = function(str)
+            {
+                document.getElementById("Id1").innerText = str;
+            }
+            var alertShow = function(str)
+            {
+                alert(str);
+            }
+            var changeColor = function ()
+            {
+                document.getElementById("Id1").style.color = '#ff9900';
+            }
+        </script>
+            
+    </body>
+    
+</html>
