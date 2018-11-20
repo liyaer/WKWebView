@@ -37,7 +37,7 @@
 {
     if (!_userScript)
     {
-        NSString *jSString = @"var count = document.images.length;for (var i = 0; i < count; i++) {var image = document.images[i];image.style.width=220;};window.alert('找到' + count + '张图');";
+        NSString *jSString = @"var count = document.images.length; for (var i = 0; i < count; i++) {var image = document.images[i];image.style.width=220;}; window.alert('找到' + count + '张图'); document.documentElement.style.webkitUserSelect='none'";
         _userScript = [[WKUserScript alloc] initWithSource:jSString injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
     }
     return _userScript;
@@ -64,12 +64,14 @@
 
 #pragma mark - WKUIDelegate : 主要处理JS脚本，确认框，警告框等
 
-/**
- *  web界面中有alert(js代码写的alert)时调用
+/*
+ *  对应js的alert方法
+ *  web界面中弹出警告框时调用。注意：只能有一个按钮（js中alert下面只有一个按钮，要对应）
  *
  *  @param webView           实现该代理的webview
  *  @param message           警告框中的内容
- *  @param completionHandler 警告框消失调用
+ *  @param frame             可用于区分哪个窗口调用的
+ *  @param completionHandler 警告框消失调用，回调给JS
  */
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
 {
@@ -82,9 +84,15 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#warning 以下方法未测试出，何时调用
-// 确认框
-//JavaScript调用confirm方法后回调的方法 confirm是js中的确定框，需要在block中把用户选择的情况传递进去
+/*
+ *  对应js的confirm方法
+ *  webView中弹出选择框时调用。 两个按钮
+ *
+ *  @param webView              webView description
+ *  @param message              提示信息
+ *  @param frame                可用于区分哪个窗口调用的
+ *  @param completionHandler    确认框消失的时候调用, 回调给JS, 参数为选择结果: YES or NO
+ */
 - (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler
 {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:message?:@"" preferredStyle:UIAlertControllerStyleAlert];
@@ -99,8 +107,16 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-// 输入框
-//JavaScript调用prompt方法后回调的方法 prompt是js中的输入框 需要在block中把用户输入的信息传入
+/*
+ *  对应js的prompt方法
+ *  webView中弹出输入框时调用。 两个按钮 和 一个输入框
+ 
+ *  @param webView              webView description
+ *  @param prompt               提示信息
+ *  @param defaultText          默认提示文本
+ *  @param frame                可用于区分哪个窗口调用的
+ *  @param completionHandler    输入框消失的时候调用, 回调给JS, 参数为输入的内容
+ */
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable))completionHandler
 {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:prompt message:@"" preferredStyle:UIAlertControllerStyleAlert];
@@ -112,10 +128,16 @@
      {
          completionHandler(alertController.textFields[0].text?:@"");
      }])];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action)
+    {
+        completionHandler(defaultText);
+    }]];
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-// 页面是弹出窗口 _blank 处理
+#warning 以下方法未测试出，何时调用
+
+// 页面是弹出窗口 _blank 处理（创建新的webView）
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
     if (!navigationAction.targetFrame.isMainFrame)

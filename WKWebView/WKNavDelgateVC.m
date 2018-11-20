@@ -48,7 +48,8 @@
     //加载本地、网络的 URL
     NSString *localPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
     _url = [NSURL fileURLWithPath:localPath];
-    _url = [NSURL URLWithString:@"https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9454146075587313245%22%7D&n_type=0&p_from=1"];//@"http://www.baidu.com"];
+    _url = [NSURL URLWithString:@"https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9454146075587313245%22%7D&n_type=0&p_from=1"];
+//    _url = [NSURL URLWithString:@"http://www.baidu.com"];
     [self.webView loadRequest:[NSURLRequest requestWithURL:_url]];
     
 //    [self.webView loadHTMLString:@"<html><head><title></title><script language='javascript'>location.href='http://mob.cnki.net/EditorB3N/EditorWorkPlace/ReferDown.aspx?mid=yanshi3&downID=l4Nn%2fWscihnFWEifytU5nResR%2bSB47VLVNhQyFg%2bJar1NPOObG3a1V4WYxQ%2brwXf5N6%2fgIh%2b%2fFVo7xWkoO5KOSnBka4%2bUl0tQcPOvT%2bwEPpGwUQRK88zsuuzq0le0r9eyvSrXYshurZt90cdwtLoyaMlwZ4yTk69yJwUA6VTkFH7FXd4BTGJoUmFxMnUrWuZggzEDIE5X9RPOOm58m5c0ljHnncsdO8X4tt22KI16RCVqYLqwzitPXF5uQ8CreCTR4gq9gXE7ecdGNfTSi2XSQtGXcy1gO%2ba&paperNum=20180120&paperTitle=%E6%97%A9%E6%9C%9F%E8%BF%90%E5%8A%A8%E7%96%97%E6%B3%95%E7%BB%93%E5%90%88%E7%89%A9%E7%90%86%E7%96%97%E6%B3%95%E5%AF%B9%E8%80%81%E5%B9%B4%E4%B8%8B%E8%82%A2%E9%AA%A8%E6%8A%98%E6%9C%AF%E5%90%8E%E6%82%A3%E8%80%85%E8%BF%90%E5%8A%A8%E5%8A%9F%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D';</script></head><body></body></html>" baseURL:nil];
@@ -104,11 +105,15 @@
 #pragma mark - WKNavigationDelegate : 主要处理一些跳转拦截、加载过程的各个状态的操作
 
 /*
- 没有重定向的调用顺序: 1 - 2 - 4 - （5） - 6（若是6.2，那么可能不经过5）
- 有重定向的调用顺序(以一次重定向为例): 1 - 2 - 1(重定向的拦截) - 3 - 4 -(5) - 6
+    调用顺序：
+        没有重定向: 1 - 2 - 4 - （5） - 6（若是6.2，那么可能不经过5）
+        有重定向(以一次重定向为例): 1 - 2 - 1(重定向的拦截) - 3 - 4 -(5) - 6
+ 
+    个别方法说明：
+        1，4 通常用于处理跨域的链接能否导航（WebKit对跨域进行了安全检查限制，不允许跨域，因此我们要对不能跨域的链接单独处理）
  */
 
-// 1，可拦截即将跳转的 HTTP 请求头信息和其他相关信息（可用于实现是否跳转等操作）
+// 1，在发送请求之前，决定是否允许或取消导航。（可拦截即将发送的 HTTP 请求头信息和其他相关信息）
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     NSString *urlStr = navigationAction.request.URL.absoluteString;
@@ -120,17 +125,17 @@
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"WKNavigationDelegate 通过截取 请求头 进行某些操作" message:@"这是一个网络连接，是否继续?" preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:([UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action)
          {
-             decisionHandler(WKNavigationActionPolicyCancel);//终止跳转
+             decisionHandler(WKNavigationActionPolicyCancel);//终止跳转（导航）
          }])];
         [alertController addAction:([UIAlertAction actionWithTitle:@"打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
          {
-             decisionHandler(WKNavigationActionPolicyAllow);//继续跳转
+             decisionHandler(WKNavigationActionPolicyAllow);//继续跳转（导航）
          }])];
         [self presentViewController:alertController animated:YES completion:nil];
     }
     else
     {
-        decisionHandler(WKNavigationActionPolicyAllow);//继续跳转
+        decisionHandler(WKNavigationActionPolicyAllow);//继续跳转（导航）
     }
 }
 
@@ -146,7 +151,7 @@
     NSLog(@"重定向调用");
 }
 
-// 4，拦截客户端受到的服务器“响应头”相关信息来决定是否可以跳转
+// 4，收到响应后，决定是否允许或取消导航。（可拦截客户端收到的服务器“响应头”相关信息）
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
     NSString * urlStr = navigationResponse.response.URL.absoluteString;
@@ -179,6 +184,10 @@
        [self->_webProgress removeFromSuperview];
        self->_webProgress = nil;
    });
+    
+    // 禁用选中效果（禁止复制粘贴选项）实测这一句就可以，也可以使用WKUserScript注入的方式
+    [self.webView evaluateJavaScript:@"document.documentElement.style.webkitUserSelect='none'" completionHandler:nil];
+//    [self.webView evaluateJavaScript:@"document.documentElement.style.webkitTouchCallout='none'" completionHandler:nil];
 }
 
 // 6.2，web视图加载内容发生错误（加载失败）
@@ -210,11 +219,30 @@
 //需要响应身份验证时调用 同样在block中需要传入用户身份凭证
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler
 {
+    //使用场景一：
     //用户身份信息
     NSURLCredential * newCred = [[NSURLCredential alloc] initWithUser:@"user123" password:@"123" persistence:NSURLCredentialPersistenceNone];
     //为 challenge 的发送方提供 credential
     [challenge.sender useCredential:newCred forAuthenticationChallenge:challenge];
     completionHandler(NSURLSessionAuthChallengeUseCredential,newCred);
+    
+    //使用场景二：
+    //当使用 Https 协议加载web内容时，使用的证书不合法或者证书过期时需要使用该方法
+//    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+//    {
+//        if ([challenge previousFailureCount] == 0)
+//        {
+//            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]; completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+//        }
+//        else
+//        {
+//            completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+//        }
+//    }
+//    else
+//    {
+//        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+//    }
 }
 
 

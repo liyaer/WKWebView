@@ -45,21 +45,23 @@
     
     NSString *localPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
     /*
-         三种初始化方式和 JS 交互的说明：（一般都是和网络的网页交互，本地的话没必要）
+         三种初始化方式和 JS 交互的说明：（一般都是和网络的网页交互，本地的话没必要。这里以本地为例进行测试）
             若是本地的网页：方式一可以；方式二、三需要传 baseURL 才可以，传nil的话可以展示，但无法交互
             若是网络的网页：同上（未验证）
+     
+        小问题：对于方式二、三，baseUrl该传什么？两种方式采用不同写法，进行对比
      */
     //方式一：加载本地、网络的 URL（以本地为例，网络的同理）
-    _url = [NSURL fileURLWithPath:localPath];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:_url]];
+//    _url = [NSURL fileURLWithPath:localPath];
+//    [self.webView loadRequest:[NSURLRequest requestWithURL:_url]];
     
     //方式二：加载本地、网络请求下来的 htmlStr（以本地为例，网络的同理）
 //    _htmlStr = [[NSString alloc] initWithContentsOfFile:localPath encoding:NSUTF8StringEncoding error:nil];
-//    [self.webView loadHTMLString:_htmlStr baseURL:[NSURL fileURLWithPath:localPath]];
+//    [self.webView loadHTMLString:_htmlStr baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath] /* localPath */]];
     
     //方式三：加载本地、网络请求下来的 data（以本地为例，网络的同理）
-//    _data = [[NSData alloc] initWithContentsOfFile:localPath];
-//    [self.webView loadData:_data MIMEType:@"text/html" characterEncodingName:@"UTF-8" baseURL:[NSURL fileURLWithPath:localPath]];
+    _data = [[NSData alloc] initWithContentsOfFile:localPath];
+    [self.webView loadData:_data MIMEType:@"text/html" characterEncodingName:@"UTF-8" baseURL:[NSURL fileURLWithPath:localPath /* [[NSBundle mainBundle] bundlePath] */]];
     
     
     //先执行子类 viewDidLoad，后执行父类 viewDidLoad（因为Demo需要 webView 的初始化需要在配置 webConfig 中的userViewController 之后）

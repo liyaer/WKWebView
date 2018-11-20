@@ -44,7 +44,7 @@
     {
         _webConfig = [WKWebViewConfiguration new];
         _webConfig.preferences = self.preferences;
-        // 是使用h5的视频播放器在线播放, 还是使用原生播放器全屏播放
+        // HTML5视频是否内嵌播放(yes)或使用native全屏控制器播放(no)
         _webConfig.allowsInlineMediaPlayback = YES;
         //设置视频是否需要用户手动播放  设置为NO则会允许自动播放
         _webConfig.requiresUserActionForMediaPlayback = YES;
