@@ -147,6 +147,40 @@
     return nil;
 }
 
+/*
+    关于<createWebViewWithConfiguration>的调用时机：（网上的资料，自己未验证）
+ 
+情景再现：当html源代码中，一个可点击的标签带有 target='_blank' 时，导致WKWebView无法加载点击后的网页的问题（就是点击某个按钮无反应）。
+ 
+问题出现的原因：_blank 标签，众所周知，是让浏览器新开一个页面来打开链接，而不是在原网页上打开。在UIWebView上，只有一个页面，所以会自动在原来的页面上打开新链接。但是在WKWebView上就不是这样了。
+ 
+WKWebView的处理机制：WKWebView 的 WKNavigationDelegate 有一个
+ - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
+ 方法。用户点击网页上的链接，需要打开新页面时，将先调用这个方法。这个方法的参数 WKNavigationAction 中有两个属性：sourceFrame和targetFrame，分别代
+ 表这个action的出处和目标。类型是 WKFrameInfo 。WKFrameInfo有一个 mainFrame 的属性，正是这个属性标记着这个frame是在主frame里还是新开一个frame。
+ 如果 targetFrame 的 mainFrame 属性为NO，表明这个 WKNavigationAction 将会新开一个页面。 WKWebView遇到这种情况，将会调用 它的 WKUIDelegate 代理中的
+ - (nullable WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures;
+ 方法。开发者实现这个方法，返回一个新的WKWebView，让 WKNavigationAction 在新的webView中打开。如果你没有设置 WKUIDelegate代理，或者没有实现这个协
+ 议。那么WKWebView将什么事情都不会做，也就是你点那个按钮没反应。
+
+ 注意：返回的这个WKWebView不能和原来的WKWebView是同一个。如果你返回了原来的webView，将会抛出异常。
+ 
+ apple设置这个协议的作用就是要求开发者新开一个webView。但实际使用中，我们的应用中webView也就拿来简简单单显示网页罢了，写那么复杂没必要。
+ 解决办法：
+    方式一：就是上面所写的那样。 这样处理的话，相当于放弃掉原来的点击事件，强制让webView加载打开的链接。
+    缺点：有时候navigationAction.request 竟然是空的！request的URL是空的！（我没遇到过，未能验证）
+ 
+    方式二：在这里，将网页上所有的_blank标签都去掉了。一劳永逸。。。。。。
+ - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+ {
+     if (!navigationAction.targetFrame.isMainFrame)
+     {
+        [webView evaluateJavaScript:@"var a = document.getElementsByTagName('a');for(var i=0;i<a.length;i++){a[i].setAttribute('target','');}" completionHandler:nil];
+     }
+     decisionHandler(WKNavigationActionPolicyAllow);
+ }
+ 
+ */
 
 
 @end
