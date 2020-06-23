@@ -12,7 +12,8 @@
 #define DScreenWidth [UIScreen mainScreen].bounds.size.width
 
 
-@interface WKNavDelgateVC ()//未写WKNavigationDelegate和设置代理关系，因为父类实现了这一过程，虽然可以使用代理方法，但是并不会出现方法提示
+//未遵循<WKNavigationDelegate>和设置代理关系，因为父类实现了这一过程，虽然可以使用代理方法，但是并不会出现方法提示
+@interface WKNavDelgateVC ()
 
 @property (nonatomic,strong) UIProgressView *webProgress;
 
@@ -23,10 +24,8 @@
 
 #pragma mark - 懒加载
 
--(UIProgressView *)webProgress
-{
-    if (!_webProgress)
-    {
+- (UIProgressView *)webProgress {
+    if (!_webProgress) {
         _webProgress = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, DScreenWidth, 1)];
         _webProgress.progressTintColor = [UIColor redColor];
 //        _webProgress.trackTintColor = [UIColor whiteColor];
@@ -35,23 +34,15 @@
     return _webProgress;
 }
 
-
-
-
 #pragma mark - 初始化
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    //加载本地、网络的 URL
-    NSString *localPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
-    _url = [NSURL fileURLWithPath:localPath];
-    _url = [NSURL URLWithString:@"https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9454146075587313245%22%7D&n_type=0&p_from=1"];
-//    _url = [NSURL URLWithString:@"http://www.baidu.com"];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:_url]];
-    
+    [self loadContentWithType:WKContentLocalURL];
+    //测试重定向的调用
+//    NSURL *netUrl = [NSURL URLWithString:@"https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9454146075587313245%22%7D&n_type=0&p_from=1"];
+//    [self.webView loadRequest:[NSURLRequest requestWithURL:netUrl]];
     
     //添加监测网页加载进度的观察者
     [self.webView addObserver:self
@@ -80,7 +71,8 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^
            {
 #warning Xcode9.3版本以后会出现，修改方法笔记中已记载，但是这不修改是想回忆self->访问成员变量的用法
-               self->_webProgress.progress = 0;
+                [self->_webProgress removeFromSuperview];
+                self->_webProgress = nil;
            });
         }
     }
@@ -96,9 +88,6 @@
                               context:context];
     }
 }
-
-
-
 
 #pragma mark - WKNavigationDelegate : 主要处理一些跳转拦截、加载过程的各个状态的操作
 
@@ -137,7 +126,7 @@
     }
 }
 
-// 2，web视图开始加载web内容时调用
+// 2，web视图开始加载web内容时调用（开始请求）
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
     NSLog(@"web开始加载");
@@ -177,14 +166,8 @@
 {
     NSLog(@"web加载完成");
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^
-   {
-       [self->_webProgress removeFromSuperview];
-       self->_webProgress = nil;
-   });
-    
-    // 禁用选中效果（禁止复制粘贴选项）实测这一句就可以，也可以使用WKUserScript注入的方式
-    [self.webView evaluateJavaScript:@"document.documentElement.style.webkitUserSelect='none'" completionHandler:nil];
+//    // 禁用选中效果（禁止文字、图片长按出现的复制粘贴选项），也可以使用WKUserScript注入的方式
+//    [self.webView evaluateJavaScript:@"document.documentElement.style.webkitUserSelect='none'" completionHandler:nil];
 //    [self.webView evaluateJavaScript:@"document.documentElement.style.webkitTouchCallout='none'" completionHandler:nil];
 }
 
@@ -192,12 +175,6 @@
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     NSLog(@"web加载失败");
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^
-   {
-       [self->_webProgress removeFromSuperview];
-       self->_webProgress = nil;
-   });
 }
 
 #warning 以下方法未测试出，何时调用
@@ -242,9 +219,6 @@
 //        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
 //    }
 }
-
-
-
 
 #pragma mark - dealloc
 

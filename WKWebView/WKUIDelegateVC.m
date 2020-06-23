@@ -9,7 +9,8 @@
 #import "WKUIDelegateVC.h"
 
 
-@interface WKUIDelegateVC ()//未写WKUIDelegate和设置代理关系，因为父类实现了这一过程，虽然可以使用代理方法，但是并不会出现方法提示
+//未遵循<WKUIDelegate>和设置代理关系，因为父类实现了这一过程，虽然可以使用代理方法，但是并不会出现方法提示
+@interface WKUIDelegateVC ()
 
 @property (nonatomic,strong) WKUserContentController *userViewController;
 @property (nonatomic,strong) WKUserScript *userScript;
@@ -22,45 +23,33 @@
 #pragma mark - 懒加载
 
 //这个类主要用来做native与JavaScript的交互管理
-- (WKUserContentController *)userViewController
-{
-    if(_userViewController == nil)
-    {
+- (WKUserContentController *)userViewController {
+    if(_userViewController == nil) {
         _userViewController = [WKUserContentController new];
         [_userViewController addUserScript:self.userScript];
     }
     return _userViewController;
 }
 
-//用于进行JavaScript注入（这里一般是注入一段额外的js代码，进行一些全局性的配置，比如我们常说的文字大小、图片适配等。本质上不属于oc和js的交互，注意区分）
--(WKUserScript *)userScript
-{
-    if (!_userScript)
-    {
-        NSString *jSString = @"var count = document.images.length; for (var i = 0; i < count; i++) {var image = document.images[i];image.style.width=220;}; window.alert('找到' + count + '张图'); document.documentElement.style.webkitUserSelect='none'";
+//OC 调用 JS（常用于WKWebView初始化，一般是注入一段额外的js代码，进行一些全局性的配置，比如我们常说的文字大小、图片适配等。当然evaluateJavaScript也可以完成这些操作，evaluateJavaScript使用范围更广阔）
+- (WKUserScript *)userScript {
+    if (!_userScript) {
+        NSString *jSString = @"var count = document.images.length; for (var i = 0; i < count; i++) {var image = document.images[i];image.style.width=280;}; window.alert('找到' + count + '张图'); document.documentElement.style.webkitUserSelect='none'";
         _userScript = [[WKUserScript alloc] initWithSource:jSString injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
     }
     return _userScript;
 }
 
-
-
-
 #pragma mark - 初始化
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     self.webConfig.userContentController = self.userViewController;
     
-    _url = [NSURL URLWithString:@"https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9454146075587313245%22%7D&n_type=0&p_from=1"];//@"http://www.baidu.com"];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:_url]];
+    [self loadContentWithType:WKContentNetURL];
     
     //先执行子类 viewDidLoad，后执行父类 viewDidLoad（因为Demo需要 webView 的初始化需要在配置 webConfig 中的userViewController 之后）
     [super viewDidLoad];
 }
-
-
-
 
 #pragma mark - WKUIDelegate : 主要处理JS脚本，确认框，警告框等
 
@@ -134,8 +123,6 @@
     }]];
     [self presentViewController:alertController animated:YES completion:nil];
 }
-
-#warning 以下方法未测试出，何时调用
 
 // 页面是弹出窗口 _blank 处理（创建新的webView）
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures

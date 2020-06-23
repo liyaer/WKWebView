@@ -12,12 +12,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WKWebBaseVC : UIViewController 
-{
-    NSURL *_url;
-}
+
+typedef NS_ENUM(NSInteger, WKContentType) {
+    WKContentLocalURL,
+    WKContentNetURL,
+    WKContentHtmlString,
+    WKContentData
+};
+
+
+@interface WKWebBaseVC : UIViewController
+
 @property (nonatomic,strong) WKWebView *webView;
 @property (nonatomic,strong) WKWebViewConfiguration *webConfig;
+
+
+- (void)loadContentWithType:(WKContentType)contentType;
 
 @end
 
