@@ -18,10 +18,11 @@
 		044DA13521998E2000FC4347 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DA13421998E2000FC4347 /* main.m */; };
 		044DA13F21998E2000FC4347 /* WKWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DA13E21998E2000FC4347 /* WKWebViewTests.m */; };
 		044DA14A21998E2000FC4347 /* WKWebViewUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DA14921998E2000FC4347 /* WKWebViewUITests.m */; };
+		047D9A3824ECD15F00B2886E /* HanPi in Resources */ = {isa = PBXBuildFile; fileRef = 047D9A3724ECD15F00B2886E /* HanPi */; };
+		047D9A3924ED14EB00B2886E /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D3190243CD46B00413FAD /* 1.jpg */; };
 		3C374C4E245843EA0078F915 /* WLWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C374C4A245843E90078F915 /* WLWebView.m */; };
 		3C374C4F245843EA0078F915 /* WLWeakScriptMessageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C374C4C245843EA0078F915 /* WLWeakScriptMessageDelegate.m */; };
 		3C3B8ABD2430F02B00E218CB /* TestVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3B8ABC2430F02B00E218CB /* TestVC.m */; };
-		3C3D317A243C220B00413FAD /* userBook in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D3178243C220B00413FAD /* userBook */; };
 		3C3D317B243C220B00413FAD /* ReadHtml in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D3179243C220B00413FAD /* ReadHtml */; };
 		3C3D3183243C937E00413FAD /* 0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D3182243C937C00413FAD /* 0.jpg */; };
 		3C3D3185243C938700413FAD /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D3184243C938600413FAD /* index.html */; };
@@ -73,6 +74,7 @@
 		044DA14521998E2000FC4347 /* WKWebViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WKWebViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		044DA14921998E2000FC4347 /* WKWebViewUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKWebViewUITests.m; sourceTree = "<group>"; };
 		044DA14B21998E2000FC4347 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		047D9A3724ECD15F00B2886E /* HanPi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = HanPi; sourceTree = "<group>"; };
 		3C374C4A245843E90078F915 /* WLWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLWebView.m; sourceTree = "<group>"; };
 		3C374C4B245843E90078F915 /* WLWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLWebView.h; sourceTree = "<group>"; };
 		3C374C4C245843EA0078F915 /* WLWeakScriptMessageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLWeakScriptMessageDelegate.m; sourceTree = "<group>"; };
@@ -80,7 +82,6 @@
 		3C39DAC4242CEB3900FA7162 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		3C3B8ABB2430F02B00E218CB /* TestVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestVC.h; sourceTree = "<group>"; };
 		3C3B8ABC2430F02B00E218CB /* TestVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestVC.m; sourceTree = "<group>"; };
-		3C3D3178243C220B00413FAD /* userBook */ = {isa = PBXFileReference; lastKnownFileType = folder; path = userBook; sourceTree = "<group>"; };
 		3C3D3179243C220B00413FAD /* ReadHtml */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReadHtml; sourceTree = "<group>"; };
 		3C3D3182243C937C00413FAD /* 0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 0.jpg; sourceTree = "<group>"; };
 		3C3D3184243C938600413FAD /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -222,7 +223,7 @@
 			children = (
 				3C3D318C243CBD2C00413FAD /* index1.html */,
 				3C3D3179243C220B00413FAD /* ReadHtml */,
-				3C3D3178243C220B00413FAD /* userBook */,
+				047D9A3724ECD15F00B2886E /* HanPi */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -342,13 +343,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				047D9A3924ED14EB00B2886E /* 1.jpg in Resources */,
+				047D9A3824ECD15F00B2886E /* HanPi in Resources */,
 				3C3D3183243C937E00413FAD /* 0.jpg in Resources */,
 				3C3D318D243CBD2C00413FAD /* index1.html in Resources */,
 				044DA13221998E2000FC4347 /* LaunchScreen.storyboard in Resources */,
 				3C3DBDEC24436B6100F86FEE /* indexTY.html in Resources */,
 				3C3D317B243C220B00413FAD /* ReadHtml in Resources */,
 				3C3D3185243C938700413FAD /* index.html in Resources */,
-				3C3D317A243C220B00413FAD /* userBook in Resources */,
 				3C9C718B243645EE00F18DEB /* baseURL说明.png in Resources */,
 				044DA12F21998E1F00FC4347 /* Assets.xcassets in Resources */,
 				3CF716CA242B6E19007CF48E /* tre.docx in Resources */,

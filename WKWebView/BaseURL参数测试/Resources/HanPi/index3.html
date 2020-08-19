@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    
+    <body>
+        <div style="margin-top: 100px">
+            <input type="button" value="改变下面的语言" onclick="changeText_js()">
+            <h2> <p id="Id1">My Name is Du Benben</p> </h2>
+        </div>
+        
+        <div>
+            <img src="2.jpg"  alt="上海鲜花港 - 郁金香" />
+        </div>
+        
+        <a onclick = "pushVC_js()" href="">点击跳转</a>
+            
+        <script>
+            //JS 调用 OC
+            //情景描述：点击网页控件触发事件，JS不处理事件，转交给OC处理（有点代理的意思）
+            var changeText_js = function() {
+                //需要通过 window.webkit.messageHandlers.<name>.postMessage(<messageBody>) 发送消息
+                //可以和后台约定：name（JS对象）作为方法名，messageBody作为参数
+                window.webkit.messageHandlers.changeText_oc.postMessage('My Name is Du Benben');
+            }
+            var pushVC_js = function() {
+                //注意：无参传 ‘’ 或者 null
+                window.webkit.messageHandlers.pushVC_oc.postMessage('');
+            }
+        
+            //OC 调用 JS
+            //情景描述：点击原生控件触发事件，OC不处理事件，转交给JS处理；或者逻辑关系上的直接调用（更改网页颜色等操作）
+            var changeButtonWithText = function(str) {
+                document.getElementById("Id1").innerText = str;
+            }
+            var changeColor = function () {
+                document.getElementById("Id1").style.color = '#ff9900';
+            }
+            var alertShow = function(str) {
+                alert(str);
+            }
+        </script>
+    </body>
+</html>
