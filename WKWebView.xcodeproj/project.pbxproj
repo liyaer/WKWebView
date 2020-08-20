@@ -18,8 +18,7 @@
 		044DA13521998E2000FC4347 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DA13421998E2000FC4347 /* main.m */; };
 		044DA13F21998E2000FC4347 /* WKWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DA13E21998E2000FC4347 /* WKWebViewTests.m */; };
 		044DA14A21998E2000FC4347 /* WKWebViewUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 044DA14921998E2000FC4347 /* WKWebViewUITests.m */; };
-		047D9A3824ECD15F00B2886E /* HanPi in Resources */ = {isa = PBXBuildFile; fileRef = 047D9A3724ECD15F00B2886E /* HanPi */; };
-		047D9A3924ED14EB00B2886E /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D3190243CD46B00413FAD /* 1.jpg */; };
+		04A44D4F24EE20A4007B961A /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C3D3190243CD46B00413FAD /* 1.jpg */; };
 		3C374C4E245843EA0078F915 /* WLWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C374C4A245843E90078F915 /* WLWebView.m */; };
 		3C374C4F245843EA0078F915 /* WLWeakScriptMessageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C374C4C245843EA0078F915 /* WLWeakScriptMessageDelegate.m */; };
 		3C3B8ABD2430F02B00E218CB /* TestVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3B8ABC2430F02B00E218CB /* TestVC.m */; };
@@ -74,7 +73,6 @@
 		044DA14521998E2000FC4347 /* WKWebViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WKWebViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		044DA14921998E2000FC4347 /* WKWebViewUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKWebViewUITests.m; sourceTree = "<group>"; };
 		044DA14B21998E2000FC4347 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		047D9A3724ECD15F00B2886E /* HanPi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = HanPi; sourceTree = "<group>"; };
 		3C374C4A245843E90078F915 /* WLWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLWebView.m; sourceTree = "<group>"; };
 		3C374C4B245843E90078F915 /* WLWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLWebView.h; sourceTree = "<group>"; };
 		3C374C4C245843EA0078F915 /* WLWeakScriptMessageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLWeakScriptMessageDelegate.m; sourceTree = "<group>"; };
@@ -223,7 +221,6 @@
 			children = (
 				3C3D318C243CBD2C00413FAD /* index1.html */,
 				3C3D3179243C220B00413FAD /* ReadHtml */,
-				047D9A3724ECD15F00B2886E /* HanPi */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -343,8 +340,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				047D9A3924ED14EB00B2886E /* 1.jpg in Resources */,
-				047D9A3824ECD15F00B2886E /* HanPi in Resources */,
+				04A44D4F24EE20A4007B961A /* 1.jpg in Resources */,
 				3C3D3183243C937E00413FAD /* 0.jpg in Resources */,
 				3C3D318D243CBD2C00413FAD /* index1.html in Resources */,
 				044DA13221998E2000FC4347 /* LaunchScreen.storyboard in Resources */,
